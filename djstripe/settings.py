@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 import sys
 from django.conf import settings
-from django.core.exceptions import ImproperlyConfigured
+from django.core.exceptions import ImproperlyConfigured, AppRegistryNotReady
 from django.utils import importlib
 
 from . import safe_settings
@@ -15,6 +15,8 @@ def get_user_model():
     try:
         from django.contrib.auth import get_user_model
         User = get_user_model()
+    except AppRegistryNotReady:
+        User = settings.AUTH_USER_MODEL
     except ImportError:
         from django.contrib.auth.models import User
     return User
